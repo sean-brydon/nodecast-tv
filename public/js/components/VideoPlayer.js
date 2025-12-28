@@ -72,7 +72,11 @@ class VideoPlayer {
             // Faster recovery from errors
             levelLoadingMaxRetry: 4,
             manifestLoadingMaxRetry: 4,
-            fragLoadingMaxRetry: 6
+            fragLoadingMaxRetry: 6,
+            // Caption/Subtitle settings
+            enableCEA708Captions: true,    // Enable CEA-708 closed captions
+            enableWebVTT: true,            // Enable WebVTT subtitles
+            renderTextTracksNatively: true // Use native browser rendering for text tracks
         };
     }
 

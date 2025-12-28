@@ -452,6 +452,15 @@ h4 {
   /* Maintain aspect ratio without overflow */
 }
 
+/* Closed Caption styling */
+video::cue {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-size: 1.2em;
+  font-family: inherit;
+  padding: 0.2em 0.5em;
+}
+
 .player-overlay {
   position: absolute;
   inset: 0;
