@@ -56,6 +56,26 @@ class VideoPlayer {
         }
     }
 
+    /**
+     * Get HLS.js configuration with buffer settings optimized for stable playback
+     */
+    getHlsConfig() {
+        return {
+            enableWorker: true,
+            // Buffer settings to prevent underruns during background tab throttling
+            maxBufferLength: 30,           // Buffer up to 30 seconds of content
+            maxMaxBufferLength: 60,        // Absolute max buffer 60 seconds
+            maxBufferSize: 60 * 1000 * 1000, // 60MB max buffer size
+            // Live stream settings - stay further from live edge for stability
+            liveSyncDurationCount: 3,      // Stay 3 segments behind live
+            liveMaxLatencyDurationCount: 10, // Allow up to 10 segments behind before catching up
+            // Faster recovery from errors
+            levelLoadingMaxRetry: 4,
+            manifestLoadingMaxRetry: 4,
+            fragLoadingMaxRetry: 6
+        };
+    }
+
     init() {
         // Apply default/remembered volume
         const volume = this.settings.rememberVolume ? this.settings.lastVolume : this.settings.defaultVolume;
@@ -71,10 +91,7 @@ class VideoPlayer {
 
         // Initialize HLS.js if supported
         if (Hls.isSupported()) {
-            this.hls = new Hls({
-                enableWorker: true,
-                lowLatencyMode: true
-            });
+            this.hls = new Hls(this.getHlsConfig());
 
             this.hls.on(Hls.Events.ERROR, (event, data) => {
                 console.error('HLS error:', data);
@@ -171,7 +188,7 @@ class VideoPlayer {
 
             // Priority 1: Use HLS.js for all browsers that support it (Chrome, Firefox, Edge, etc.)
             if (Hls.isSupported()) {
-                this.hls = new Hls();
+                this.hls = new Hls(this.getHlsConfig());
                 this.hls.loadSource(finalUrl);
                 this.hls.attachMedia(this.video);
 
